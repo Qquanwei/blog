@@ -5,7 +5,7 @@ email: quanwei9958@126.com
 description: > # this means to ignore newlines until "url:"
   程序员就要好好吃香蕉才对
 url: "/" # the base hostname & protocol for your site
-baseurl: "" # the subpath of your site, e.g. /blog/
+baseurl: "/blog/" # the subpath of your site, e.g. /blog/
 github_username:  Qquanwei
 
 permalink: pretty
