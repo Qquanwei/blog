@@ -32,7 +32,7 @@ image: ramda.png
   myarray.filter( (item)=>{
      const lastname = item.name.lastname;
      return lastname === 'jak' ||
-            lastname === 'jak' ||
+            lastname === 'Jonh' ||
             lastname === 'M';
   })
 ~~~~~~
