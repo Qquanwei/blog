@@ -3,8 +3,9 @@ title: "我的部屋"
 logo: logo.png 
 email: quanwei9958@126.com
 description: > # this means to ignore newlines until "url:"
-   没时间解释了，吃了再说
-url: "" # the base hostname & protocol for your site
+   没时间解释了，吃了再说<br/>
+   contact me: quanwei9958@126.com
+url: "http://quanweili.com" # the base hostname & protocol for your site
 baseurl: "" # the subpath of your site, e.g. /blog/
 github_username:  Qquanwei
 
