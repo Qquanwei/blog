@@ -11,7 +11,7 @@ title: Apollo-Client 使用
 
  开始在react中使用apollo-client
 
-首先是安装
+## 安装
 
 ~~~javascript
  npm install apollo-client graphql-tag react-apollo --save
@@ -48,7 +48,11 @@ render(<ApolloProvider client={client}>
         </ApolloProvider> ,document.getElementById('app'))
 
 ~~~
+
+
 一个很简单的React程序结构, 首先因为我们需要让Apollo来管理数据状态，所以使用自带的`ApolloProvider`来作为顶层组件. `createNetworkInterface`还有一个有用option是 `dataIdFromObject` , 为一个函数类型，用来normalize我们的数据用,如果不提供的话那么默认的normalize的特性就不能用，所以如果后端数据库是mongo的话，可以简单地设置`dataIdFromObject: (j)=>j._id` 来使用normalize特性.
+
+## Query
 
 page.jsx
 
@@ -119,4 +123,11 @@ class WelCome extends React.Component{
 ~~~
 
 
-graphql还有一个很不错的地方就是多个query可以一起查询，通过一个请求获取到所需要的所有数据.
+
+## mapStateToProps
+
+我们请求到的数据最终会放在redux进行存储，可是如果我们打印apollo的state看到的确是一大堆normalized处理过的数据，我们想在其他组件`mapStateToProps`的时候想将一些数据传入到组件中的时候该怎么做？ 一种方案是手动denormalized这些数据然后挂载到组件上, 但是性能是个硬伤，还有一种方法是在子组件中建立一个query，query的数据源不是server,而是我们的apollo state. ApolloClient提供了一个option`noFetch`能够满足这个功能.
+
+
+## 总结
+目前`apollo-client`给我的感觉是做了很多工作，网络层和数据层都是它来完成，我们只需要处理好逻辑层和我们的view, 思维需要从原来的全部都自己做转换过来，所以会有点不适应。 但是一旦适应了这一套方案之后在新需求到来的时候将会比原来的方案要好很多。
