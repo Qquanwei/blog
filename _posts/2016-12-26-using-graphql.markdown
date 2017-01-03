@@ -126,7 +126,7 @@ class WelCome extends React.Component{
 
 ## mapStateToProps
 
-我们请求到的数据最终会放在redux进行存储，可是如果我们打印apollo的state看到的确是一大堆normalized处理过的数据，我们想在其他组件`mapStateToProps`的时候想将一些数据传入到组件中的时候该怎么做？ 一种方案是手动denormalized这些数据然后挂载到组件上, 但是性能是个硬伤，还有一种方法是在子组件中建立一个query，query的数据源不是server,而是我们的apollo state. ApolloClient提供了一个option`noFetch`能够满足这个功能.
+我们请求到的数据最终会放在redux进行存储，可是如果我们打印apollo的state看到的确是一大堆normalized处理过的数据，我们想在其他组件`mapStateToProps`的时候想将一些数据传入到组件中的时候该怎么做？ 传统的方法是先denormalized这些数据然后挂载到组件上, 但是性能是个硬伤。Apollo给我们提供的是另外一个思想，就是数据一旦通过query获取到本地就认为这个数据是不变的,除非你自己调用了某些motation方法然后自己手动`updateQuery`修改本地的state，否则这个state就认为是一直不变的。 所以，当我们在一个组件中query到数据之后，其他组件再次发起相同的query的时候是直接从本地拿的数据! 这也就是说我们如果想要在组件间共享我们的state，只需要在每个组件写相同的query即可,虽然对于含有参数的query还是有点不方便。如果想强制更新本地的state,query的时候带上`forceUpdate:true` , 或者使用`pollInternal`定时刷新本地数据。
 
 
 ## 总结
