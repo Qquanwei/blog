@@ -13,7 +13,7 @@ video: false
 ~~~
 <template>
   <div>
-    <h3> {{ data }}</h3>
+    <h3> `{{ data }}`</h3>
     <input v-model="myInput" type="number" placeholder="input some number"/>
   </div>
 </template>
@@ -42,7 +42,7 @@ video: false
 ~~~
 <template>
   <div>
-    <h3> {{ myQuery.data }}</h3>
+    <h3> `{{ myQuery.data }} `</h3>
     <input v-model="myInput" type="number" placeholder="input some number"/>
   </div>
 </template>
