@@ -5,6 +5,8 @@ title: invariant & babel-plugin-dev-expression
 
 # invariant和babel-plugin-dev-expression
 
+先看一下github上invariant给出的demo
+
 ~~~
 var invariant = require('invariant');
 
@@ -15,7 +17,7 @@ invariant(someFalseyVal, 'This will throw an error with this message');
 // Error: Invariant Violation: This will throw an error with this message
 ~~~
 
-当条件通过时不做任何处理，不通过便抛出new Error(messages)。
+当条件通过时不做任何处理，不通过便抛出`new Error(messages)`。
 当在`process.env.NODE_ENV = 'development'`时, invariant强制需要第二个参数,当`process.env.NODE_ENV = 'production'` 后面的信息参数为可选，如果不填写，当条件不通过时会抛出下面的错误。
 
 ~~~
