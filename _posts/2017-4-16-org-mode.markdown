@@ -15,4 +15,4 @@ title: 使用emacs半年的感想
 
 ![org-agenda]({{site.baseurl}}/content/images/org-agenda.png)
 
-上图是我在emacs中按下`C-c a a`弹出的周任务清单, 每当我不知道该做什么事情时候，任务清单都能带给我新的提示, 这非常好用，因为人脑缓存里记不了那么多事。
+上图是我在emacs中按下`C-c a a`弹出的周任务清单, 每当我不知道该做什么事情时候，任务清单都能带给我新的提示, 这非常好用，因为人脑缓存里记不了那么多事。(关于org-mode的更多细节，推荐一位博主: http://sachachua.com/blog/)
