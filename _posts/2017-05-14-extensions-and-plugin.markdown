@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 扩展和插件
+title: extensions and plugin
 ---
 
 事情是这样的。
