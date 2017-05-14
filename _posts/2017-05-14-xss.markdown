@@ -25,7 +25,7 @@ Mallory发现Bob的网站存在reflected xss 漏洞, 过程如下:
 当该email被喜欢小狗的alice打开的时候，即使Alice比较有心的查看了url之后恐怕也不会过度起疑。但是当Alice随手点开这条链接之后会看到`pupples not found`以及伴随着的Mallory脚本的执行。(此时便触发了xss攻击行为)。 这时候Mallory的脚本几乎可做任何事情, 包括将Alice的登录凭证Cookie发送给Mallory的服务器。 拿到登录凭证之后Mallory便可以伪装成Alice登录到blobwebsite，并且查看其敏感信息。更加过分一些可以更改掉Alice的密码，让Alice无法登陆。
 
 
-这种Non-persistent攻击的预防可以用下面几种方法
+xss攻击的预防可以用下面几种方法
 
 * 通过合适的编码进行检查搜索输入中含有的HTML敏感数据，例如`script`,`object`,`embed`,`link`,`iframe`
 * web server可以重定向无效的请求。 例如当Alice的请求含有xss的链接后，server端进行检查之后直接重定向到安全页面
