@@ -1,6 +1,6 @@
 # Site settings
 title: "lambda 的博客"
-logo: logo.png 
+logo: logo.png
 email: quanwei9958@126.com
 description: > # this means to ignore newlines until "url:"
    没时间解释了，吃了再说<br/>
@@ -10,7 +10,7 @@ baseurl: "" # the subpath of your site, e.g. /blog/
 github_username:  Qquanwei
 
 permalink: pretty
-paginate: 5
+paginate: 10
 
 # Build settings
 markdown: kramdown
