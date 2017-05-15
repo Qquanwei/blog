@@ -73,7 +73,7 @@ CSRF意思为跨站请求伪造，也就是让客户自己不知情的情况下�
 
 Mallory发现了back.com网站存在CSRF漏洞(没有开启同源策略)，于是构造了一条向自己转账的链接`http://bank.com/transfer.do?acct=Mallory&amount=100000`
 
-接着Mallory可以给Alice发一封HTML邮件，例如一个可点击的链接`<a href="http://bank.com/transfer.do?acct=Mallory&amount=100000">View my Pictures!</a>` 但是可能还不够好，因为该请求不会自动执行，此时也可以用一张0*0大小的图片替代
+接着Mallory可以给Alice发一封HTML邮件，例如一个可点击的链接`<a href="http://bank.com/transfer.do?acct=Mallory&amount=100000">View my Pictures!</a>` 但可能还不够好，因为该请求不会自动执行，于是Mallory决定使用一张0*0大小的图片来代替
 `<img src="http://bank.com/transfer.do?acct=Mallory&amount=100000" width="0" height="0" border="0">`
 这样当Alice打开这封邮件时便会自动发起这条GET请求，达到攻击的目的。
 
@@ -96,8 +96,8 @@ acct=BLOB&amount=100
 </form>
 ~~~
 
-这样当Alice打开邮件后便会发起这条POST请求，以此来达到攻击的目的。
+这样当Alice打开邮件后便会发起这条POST请求，并达到攻击的目的。
 
-类似的其他HTTP方法，`PUT` 和 `DELETE` 原理类似，可以手动通过`XMLHttpRequest`的方式来发起请求。 不过CSRF目前基本上可用之处已经很少见了，只要浏览器和web server开启不允许跨域便可以组织 CSRF 型攻击方式。
+类似的其他HTTP方法，`PUT` 和 `DELETE` 原理类似，可以手动通过`XMLHttpRequest`的方式来发起请求。 不过CSRF目前基本上可用之处已经很少见了，只要web server不允许无限制跨域便可以阻止 CSRF 型攻击方式。
 
 所以，当心你的 `Access-Control-Allow-Origin: *`
