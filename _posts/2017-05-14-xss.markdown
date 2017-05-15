@@ -3,11 +3,11 @@ layout: post
 title: xss and csrf
 ---
 
-# xss
+## xss
 
 wiki里讲了两个xss攻击的例子. 非持续性xss(Non-persistent)，也称为Reflected xss.(来自陌生人的) 与 持续性(Persistent)攻击。
 
-## Non-persistent
+### Non-persistent
 
 Alice 经常去一个Blob的网站，且Blob的网站允许Alice使用username/password登录和存储一些敏感信息，
 当用户登录的时候Blob会将认证凭据存到Cookie中以供client到server端验证身份。
@@ -41,7 +41,7 @@ xss攻击的预防可以用下面几种方法
 * 设置Cookie为`HttpOnly` 来阻止JavaScript访问Cookie
 
 
-## Persistent attack
+### Persistent attack
 
 接着上面的例子，Non-persistent需要Mallory发email给注册了Blob网站的用户，受影响的仅限于邮件内用户。这时候Mallory换了一种思路，使用持续性xss来影响更大范围内的用户。
 
@@ -56,13 +56,13 @@ Mallory发现Blob的网站存在一个xss漏洞: 如果你在一个帖子下面�
 之后Mallory就可以使用这些登录凭据来做任何事情了。
 
 
-## 结语
+### 结语
 
 其实xss的种类有很多种，其中原理几乎全部是想尽办法将恶意脚本注入页面内，并且执行攻击者的脚本。
 上面的xss防范方法对于很多情况下都适用。
 
 
-# csrf
+## csrf
 
 CSRF意思为跨站请求伪造，也就是让客户自己不知情的情况下发起一个恶意请求，网站服务器接收到请求后以为是用户自己发出的执行一些非常规性操作。 CSRF并不能偷取用户数据，但能以用户的身份发起恶意请求。
 
