@@ -1,6 +1,9 @@
 ---
 layout: post
+title: xss and csrf
 ---
+
+# xss
 
 wiki里讲了两个xss攻击的例子. 非持续性xss(Non-persistent)，也称为Reflected xss.(来自陌生人的) 与 持续性(Persistent)攻击。
 
@@ -57,3 +60,44 @@ Mallory发现Blob的网站存在一个xss漏洞: 如果你在一个帖子下面�
 
 其实xss的种类有很多种，其中原理几乎全部是想尽办法将恶意脚本注入页面内，并且执行攻击者的脚本。
 上面的xss防范方法对于很多情况下都适用。
+
+
+# csrf
+
+CSRF意思为跨站请求伪造，也就是让客户自己不知情的情况下发起一个恶意请求，网站服务器接收到请求后以为是用户自己发出的执行一些非常规性操作。 CSRF并不能偷取用户数据，但能以用户的身份发起恶意请求。
+
+攻击流程大致如下:
+
+假设Alice向Blob转账一笔钱的请求为`GET`请求，url为`GET http://bank.com/transfer.do?acct=BLOB&amount=100 HTTP/1.1
+`
+
+Mallory发现了back.com网站存在CSRF漏洞(没有开启同源策略)，于是构造了一条向自己转账的链接`http://bank.com/transfer.do?acct=Mallory&amount=100000`
+
+接着Mallory可以给Alice发一封HTML邮件，例如一个可点击的链接`<a href="http://bank.com/transfer.do?acct=Mallory&amount=100000">View my Pictures!</a>` 但是可能还不够好，因为该请求不会自动执行，此时也可以用一张0*0大小的图片替代
+`<img src="http://bank.com/transfer.do?acct=Mallory&amount=100000" width="0" height="0" border="0">`
+这样当Alice打开这封邮件时便会自动发起这条GET请求，达到攻击的目的。
+
+如果转账的请求为`POST`, 例如
+
+~~~
+POST http://bank.com/transfer.do HTTP/1.1
+
+acct=BLOB&amount=100
+~~~
+
+此时便可以构造一个特殊的邮件内容下
+
+~~~
+<body onload="document.forms[0].submit()">
+<form action="http://bank.com/transfer.do" method="POST">
+<input type="hidden" name="acct" value="Mallory"/>
+<input type="hidden" name="amount" value="100000"/>
+<input type="submit" value="View my pictures"/>
+</form>
+~~~
+
+这样当Alice打开邮件后便会发起这条POST请求，以此来达到攻击的目的。
+
+类似的其他HTTP方法，`PUT` 和 `DELETE` 原理类似，可以手动通过`XMLHttpRequest`的方式来发起请求。 不过CSRF目前基本上可用之处已经很少见了，只要浏览器和web server开启不允许跨域便可以组织 CSRF 型攻击方式。
+
+所以，当心你的 `Access-Control-Allow-Origin: *`
