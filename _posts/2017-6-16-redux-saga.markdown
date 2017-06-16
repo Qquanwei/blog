@@ -25,7 +25,7 @@ image: redux-saga.jpg
 
 引入middleware
 
-~~~(javascript)
+~~~javascript
 
 import createSagaMiddleware from 'redux-saga';
 import { createStore, applyMiddleware, compose } from 'redux';
@@ -50,7 +50,7 @@ saga是作为一个服务启动在程序中的，不仅仅是一个middleware, �
 
 创建自定义saga
 
-~~~(javascript)
+~~~javascript
 
 import { takeLatest } from 'redux-saga'
 import { call, put } from 'redux-saga/effects'
@@ -82,7 +82,7 @@ export default function* () {
 
 所以使用时就可以很方便地
 
-~~~(javascript)
+~~~javascript
 
 dispatch({type: FETCH_AUTOCOMPLATE, payload: {q : 'h'}})
 dispatch({type: FETCH_AUTOCOMPLATE, payload: {q : 'he'}})
