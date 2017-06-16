@@ -15,7 +15,7 @@ image: redux-saga.jpg
 
 针对第一个问题，举个例子，我们有一个自动补全的输入框，用户每输入一次就会发起一次请求补全的action, 那么如果我输入的很快(或者网络很慢)发起了多个请求，这时候我们显然不需要去处理老的请求数据，也就是action一旦发起了就无法取消。
 
-第二个问题与第一个问题相似，因为网络相应无法预测，所以无法简单的统一处理多个请求。
+第二个问题与第一个问题相似，因为网络响应无法预测，所以无法简单的统一处理多个请求。
 
 第三个问题比较广泛，也比较通用。 例如一个特定action在处理完之前无法响应新的请求，或者一些次数限制 ...etc
 
@@ -43,7 +43,7 @@ const store = createStore(reducer, applyMiddleware(...middlewares));
 sagaMiddleware.run(sagas)
 export default store;
 
-~~~(javascript)
+~~~
 
 saga是作为一个服务启动在程序中的，不仅仅是一个middleware, 上面的`sagaMiddleware.run(sagas)` 即启用我们的sagas的监听程序。
 
@@ -76,7 +76,7 @@ export default function* () {
   ]
 }
 
-~~~(javascript)
+~~~
 
 这个saga文件类似一个服务，其中的takeLatest有个内循环一直监听`FETCH_AUTOCOMPLETE`这个action, 如果监听到了就执行fetchAuthComplete。 相应的，如果在fetchAutoComplete挂起(yield处)时有一个新的action到来，takeLatest会进行自己的操作取消继续执行旧的fetchAutoComplete, 转而执行新的。
 
@@ -89,7 +89,7 @@ dispatch({type: FETCH_AUTOCOMPLATE, payload: {q : 'he'}})
 dispatch({type: FETCH_AUTOCOMPLATE, payload: {q : 'hel'}})
 dispatch({type: FETCH_AUTOCOMPLATE, payload: {q : 'hell'}})
 
-~~~(javascript)
+~~~
 
 真正能进行处理的只有之后一个
 
