@@ -6,7 +6,7 @@ image: rxjs.jpeg
 
 上次介绍了`redux-saga` 可以在React中管理我们的异步action, 这次主要介绍`RxJS`来管理我们的所有异步操作。
 
-`RxJS`起源于微软最早提出的`ReactiveX`范式，是一套异步框架处理规范(相当于promise是javascri对异步的统一规范), 也是作为`promise`超集的存在。 使用RxJS主要是抽象了异步处理逻辑，从局部管理异步状态中解耦，让代码的可读性可维护性更高。
+`RxJS`起源于微软最早提出的`ReactiveX`范式，是一套异步框架处理规范(相当于promise是javascript对异步的统一规范), 也是作为`promise`超集的存在。 使用RxJS主要是抽象了异步处理逻辑，从局部管理异步状态中解耦，让代码的可读性可维护性更高。
 
 RxJS将时间轴上的事件作为一个流处理，可能来源于点击事件，或者是`WebSocket`的`message`事件， 或者动画响应等等。 RxJS用Observable表示时间轴上的事件流, Observerable提供了可以让我们执行过滤/变换/拼接一系列的操作, 最后再被真实的事件接收者所捕捉。让异步处理更加Smooth.
 
