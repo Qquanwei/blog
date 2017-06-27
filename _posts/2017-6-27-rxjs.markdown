@@ -1,18 +1,18 @@
 ---
 layout: post
-title: �ر��ļ���RxJS operatorʹ�ý���, �������Javascript
+title: 必备的几个RxJS operator使用介绍, 拯救你的Javascript
 image: savior-of-my-javascript
 ---
 
-�ϴν�����`redux-saga` ������React�й������ǵ��첽action, �����Ҫ����`RxJS`���������ǵ������첽������
+上次介绍了`redux-saga` 可以在React中管理我们的异步action, 这次主要介绍`RxJS`来管理我们的所有异步操作。
 
-`RxJS`��Դ��΢�����������`ReactiveX`��ʽ����һ���첽��ܴ����淶(�൱��promise��javascri���첽��ͳһ�淶), Ҳ����Ϊ`promise`�����Ĵ��ڡ� ʹ��RxJS��Ҫ�ǳ������첽�����߼����Ӿֲ������첽״̬�н���ô���Ŀɶ��Կ�ά���Ը��ߡ�
+`RxJS`起源于微软最早提出的`ReactiveX`范式，是一套异步框架处理规范(相当于promise是javascri对异步的统一规范), 也是作为`promise`超集的存在。 使用RxJS主要是抽象了异步处理逻辑，从局部管理异步状态中解耦，让代码的可读性可维护性更高。
 
-RxJS��ʱ�����ϵ��¼���Ϊһ����������������Դ�ڵ���¼���������`WebSocket`��`message`�¼��� ���߶�����Ӧ�ȵȡ� RxJS��Observable��ʾʱ�����ϵ��¼���, Observerable�ṩ�˿���������ִ�й���/�任/ƴ��һϵ�еĲ���, ����ٱ���ʵ���¼�����������׽�����첽��������Smooth.
+RxJS将时间轴上的事件作为一个流处理，可能来源于点击事件，或者是`WebSocket`的`message`事件， 或者动画响应等等。 RxJS用Observable表示时间轴上的事件流, Observerable提供了可以让我们执行过滤/变换/拼接一系列的操作, 最后再被真实的事件接收者所捕捉。让异步处理更加Smooth.
 
-��RxJS����д�Ĵ��������������
+用RxJS我们写的代码就像下面这样
 
-ע: ����ʹ�õ���RxJS5
+注: 本文使用的是RxJS5
 
 ~~~
 import Rx from 'rxjs'
@@ -27,13 +27,13 @@ myObserable.subscribe((item) => {
 })
 ~~~
 
-������������Ǽ򵥵�ʹ����Rxjs�������ǹ��˵��Զ����¼��Ŀ��¼��� ��RxJS�г���Լ��observer����ı�����β����`$`�� �Դ�����ʶ�˶���Ϊ`Observable`����
+这个例子中我们简单地使用了Rxjs来帮我们过滤掉自定义事件的空事件。 在RxJS中常常约定observer对象的变量名尾部用`$`， 以此来标识此对象为`Observable`对象。
 
-����������Rx.Observable.fromEvent ΪRxJS�Ĺ���������������DOM�¼�����`Observable`, ���õĻ���`fromPromise`, `fromObservable`. ��������`filter`��RxJS��`operator`, ����������, RxJS�ṩ�˷ǳ����operator, �����˸������ǳ�����߼������� �����������ĳ���û���ر�����Ĳ���ʹ��RxJS���õ�`operator`������ɡ� �������ʹ��`RxJS`�������һ: �п����㻹������`RxJS`, ��: ��Ʋ�������
+上面例子中Rx.Observable.fromEvent 为RxJS的工厂函数，用来从DOM事件创建`Observable`, 常用的还有`fromPromise`, `fromObservable`. 上面代码的`filter`是RxJS的`operator`, 用来操作流, RxJS提供了非常多的operator, 抽象了各种我们常规的逻辑操作， 基本上如果你的程序没有特别逆天的操作使用RxJS内置的`operator`都能完成。 如果不能使用`RxJS`来解决，一: 有可能你还不会用`RxJS`, 二: 设计不合理。
 
 ## map
 
-��һ��operator ����map, map����������Ĳ������ˣ��÷�Ҳ�൱�ļ򵥣�ִ�����뵽�����ӳ�䡣
+第一个operator 介绍map, map是我们最常见的操作符了，用法也相当的简单，执行输入到输出的映射。
 
 ~~~
 const myObservable$ = Rx.Observable.fromEvent(dom, 'click')
@@ -44,7 +44,7 @@ myObservable.subscribe((e) => {
 })
 ~~~
 
-ʹ���¼���ͼ����ʾ����.
+使用事件流图来表示如下.
 
 
 ~~~
@@ -56,15 +56,15 @@ e-->-----------e -->----------e--->--------->
 ~~~
 
 
-������ҪԤ��˵����RxJS���¼���Ϊ`��ģʽ`��, Ҳ�����һ��observable����û��subscribe, ��ô�������ᴦ���¼�����ֻ��subscribe��Ż������Ŀ�ʼ������ ����էһ��ûʲô���⣬��������������һЩ����operatorִ��һЩ�����ú��������������⣬�������subscribeѹ����û�ã���ʱ�����������subscribe����ʱ����¼��������Ṥ����
+这里需要预先说明，RxJS的事件流为`冷模式`的, 也就如果一个observable对象没有subscribe, 那么他将不会处理事件流，只有subscribe后才会真正的开始工作。 可能乍一想没什么问题，不过如果你想借助一些其他operator执行一些副作用函数来解决你的问题，可能你的subscribe压根就没用，这时候如果你懒得subscribe，这时候的事件流将不会工作。
 
 ## switchMap
 
-`switchMap` �������ܺ�`map`һ���� ������ǵı任�����Ǹ�ͬ���������ǵĹ�����ȫһ����switchMap��Ϊ�˽���첽�任�����ֵġ�
+`switchMap` 基本功能和`map`一样， 如果我们的变换函数是个同步函数他们的功能完全一样，switchMap是为了解决异步变换而出现的。
 
-�������ǵĽ������и�ˢ�°�ť����һ�¾ͻ����»�ȡһ�����������ݣ���Щ����������������ԭ����ܱȽ���������ʱ�䶼�ȽϾá��и�������������ǵ����ˢ�°�ť�������ݻ�û�з���֮ǰ�ֵ����һ��, ��ʱ��ͳ�ķ���ֱ����Ⱦ���������ܵ��²���ȷ��������Ϊ��������ʵʱ�仯������ʷ���ݾ���ʾ������Ļ�ϡ�
+假设我们的界面上有个刷新按钮，点一下就会重新获取一个大表格的数据，这些数据请求由于网络原因可能比较慢，所以时间都比较久。有个问题是如果我们点击了刷新按钮，在数据还没有返回之前又点击了一次, 这时候传统的方法直接渲染请求结果可能导致不正确的现象，因为可能数据实时变化导致历史数据就显示到了屏幕上。
 
-���ǽ���RxJS��������ʵ��������ܡ� �õ���operatorΪswitchMap.
+我们借助RxJS来帮我们实现这个功能。 用到的operator为switchMap.
 
 ~~~
 const Refresh = () => { ... return some heavily ajax request ... }
@@ -76,17 +76,17 @@ myObservable.subscribe((newContent) => {
 })
 ~~~
 
-�����ǵ���¼�������ִ��switchMap�ĺ����壬�������Ǵ�����һ��Rx.Observable.fromPromise�����ǵ�ajax��promiseת����`Observable`, switchMap�Ὣ���¼������뵽����������н��еȴ�(��ajax����֮ǰ���ᴥ��subscribe����)�� ��ʱ�����ֵ����һ�ΰ�ť֮��switchMap�������µ��¼������������ڻ���һ����ûִ�н�����switchMap������ɵ���ת��ִ���µĲ������ɴ����ﵽ����ֻ�������µ�����
+当我们点击事件触发后，执行switchMap的函数体，这里我们创建了一个Rx.Observable.fromPromise将我们的ajax的promise转换成`Observable`, switchMap会将此事件流加入到这个流处理中进行等待(在ajax返回之前不会触发subscribe调用)。 此时我们又点击了一次按钮之后switchMap发现有新的事件到来，而现在还有一个流没执行结束，switchMap会放弃旧的流转而执行新的操作。由此来达到我们只处理最新的需求。
 
-�¼���ͼ������ʾ:
+事件流图如下所示:
 
 ![switch-map]({{site.baseurl}}/content/images/switchMap.png)
 
 ## exhaustMap
 
-map�ı���2�� Ҳ����Ҫ����첽map�����⡣
+map的变体2， 也是主要解决异步map的问题。
 
-����: ����������һ���ϴ��ļ��İ�ť���ţ����Ǹ���ť�����Ҳ����Ƚ��أ������������һ���ϴ�����ִ�е�ʱ�������ǲ���Ӧ�����ϴ������ģ���ֹ��㵼���ظ��ϴ���
+场景: 假设我们有一个上传文件的按钮，嗯，又是个按钮，而且操作比较重，这个场景是在一个上传操作执行的时候我们是不响应其他上传操作的，防止误点导致重复上传。
 
 ~~~
 const Upload = () => { ... return some heavily ajax request ...}
@@ -98,38 +98,38 @@ myObserable.subscribe((result) => {
 })
 ~~~
 
-exhaustMap �������Ǽ���һ��`Observable`�������Ĵ�����Ԫ�У������ڴ�������֮ǰ���������������¼�����
+exhaustMap 的作用是加入一个`Observable`到本流的处理单元中，并且在处理结束之前忽略其他到来的事件流。
 
-exhaustMap �����Ƿ�����������߼��н����ˣ����Էǳ����ŵؽ��������⡣
+exhaustMap 让我们防并发请求的逻辑中解耦了，可以非常优雅地解决这个问题。
 
-�¼���ͼ������ʾ:
+事件流图如下所示:
 
 ![exhaustMap]({{site.baseurl}}/content/images/exhaustMap.png)
 
 ## buffer
 
-buffer ��һ�໺����operator, ��Ӧ�ı�����`bufferTime`, `bufferCount`, `bufferTpgg;e`.
-RxJSҲ�ṩ��`debounce`��`throttle`�������������֮ǰ��ʹ�ù�����������Ҳ����ֱ����RxJS��ʹ�á�����`debounce`��`throttle`�ֱ��Ǵ���һ��ʱ�������һ�����һ���������ǻᶪ���ǽ�ֹʱ��������������� ���ÿ���¼�������Ч�ģ���ô����Ҫ����buffer�������ˡ�
+buffer 是一类缓冲区operator, 相应的变体有`bufferTime`, `bufferCount`, `bufferTpgg;e`.
+RxJS也提供了`debounce`和`throttle`两个操作，如果之前你使用过这两个函数也可以直接在RxJS中使用。但是`debounce`和`throttle`分别是处理一段时间内最后一个与第一个请求，他们会丢掉非截止时间的其他所有请求。 如果每个事件都是有效的，那么就需要借助buffer来处理了。
 
-buffer�����ռ�һ��ʱ���ڵ������¼������ҽ���������һ��operator, �������¼������顣
+buffer可以收集一段时间内的所有事件，并且将它传入下一个operator, 参数是事件的数组。
 
-��ش�����ʱ��д ���Ƚ��������⡣
+相关代码暂时不写 ，比较容易理解。
 
-�¼���ͼ������ʾ:
+事件流图如下所示:
 
 ![buffer]({{site.baseurl}}/content/images/buffer.png)
 
 ## scan
 
-scan ��������fp�е�reduce, �����ۼƼ���ĳ��ֵ��
+scan 操作类似fp中的reduce, 可以累计计算某个值。
 
 ~~~
 scan((acc, item) => newacc)
 ~~~
 
-acc Ϊ�ϴ�scan����ʱ��ֵ��newacc�Ǳ��μ����ֵ�����Ҵ�����һ��operator.
+acc 为上次scan结束时的值，newacc是本次计算的值，并且传入下一个operator.
 
-�������и��¼������1,2,3
+例如我有个事件会输出1,2,3
 
 ~~~
  myobservable$.scan((acc, item) => acc * item)
@@ -137,19 +137,19 @@ acc Ϊ�ϴ�scan����ʱ��ֵ��newacc�Ǳ��μ����ֵ�����Ҵ�����һ��operator.
      .subscribe(console.log)
 ~~~
 
-## ���Ӧ��
+## 组合应用
 
-˵operator�е����ˣ�RxJS�ṩ�˺ܶ�����operator, ʹ�õ�ʱ������϶�����ȥ��һ�飬����2.8ԭ�� ���õľ��Ǽ����� ��ʼ˵�������һ���첽��Ϊ�޷���RxJS��������ô�п������㻹������`RxJS`
+说operator有点累了，RxJS提供了很多抽象的operator, 使用的时候基本上都会再去看一遍，根据2.8原则 常用的就那几个。 开始说过，如果一个异步行为无法用RxJS描述，那么有可能是你还不会用`RxJS`
 
-��������߼�������Ӧ��:
+下面来点高级点的组合应用:
 
-����1:
+场景1:
 
-�ռ��û����еĵ���¼���ֱ������һ��200ms�ļ����
+收集用户所有的点击事件，直到出现一个200ms的间隔。
 
-����һ������Ƶ�һ����Ϸ��������Ļ�ϲ�ͬλ�ü��ɳ���һ��ħ���֣�������Խ����ֵ�Խ�࣬Ϊ�˲����Լ������㲻�����޵ش���ħ������Ϊ���ܵз��������й�������ʱ����ͻȻֹ����ʱ�����Ϊ����һ������ħ�����¼�����ʱħ���ֿ�ʼ��Ŀ���ȥ��Ȼ�󲻶��ظ���ѭ����
+想象一下你设计的一个游戏，触摸屏幕上不同位置即可出现一个魔法轮，你点击的越快出现的越多，为了不让自己受伤你不能无限地触发魔法，因为可能敌方会对你进行攻击。这时候你突然止手这时候就认为这是一个发射魔法的事件，此时魔法轮开始向目标飞去。然后不断重复此循环。
 
-����:
+代码:
 
 ~~~
   const mahouObservable$ = Rx.Observable.fromEvent(dom, 'touch')
@@ -160,17 +160,17 @@ acc Ϊ�ϴ�scan����ʱ��ֵ��newacc�Ǳ��μ����ֵ�����Ҵ�����һ��operator.
   })
 ~~~
 
-��ͼ����
+流图如下
 ~~~
 -> -> mahouObservable$ ->e1 ->e2 ->e3 ->e4 ->e5 --(200ms)--->e ->e ->e ->
              debounce$ -> ---------------- -------->e5--->-------------->
           collections$ ->-------------------------[e1...e5]------------->
-                        (buffer�ռ��У��ȴ����������¼�)
+                        (buffer收集中，等待触发结束事件)
 ~~~
 
-�����collections�ռ�����[e1,...e5]��������ͳһ����
+结果是collections收集到了[e1,...e5]，来进行统一处理
 
 
-(����˵��Ҫ���������Ӱ�ι)
+(所以说不要让我造例子啊喂)
 
-** ����reactive diagram���Դ������վ: http://rxmarbles.com/
+** 生成reactive diagram可以从这个网站: http://rxmarbles.com/
