@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 必备的几个RxJS operator使用介绍, 拯救你的Javascript
-image: saviorofmyjavascript
+image: rxjs.jpeg
 ---
 
 上次介绍了`redux-saga` 可以在React中管理我们的异步action, 这次主要介绍`RxJS`来管理我们的所有异步操作。
