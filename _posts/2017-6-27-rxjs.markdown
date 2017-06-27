@@ -22,7 +22,7 @@ const identity = a => a;
 const myObserable$ = Rx.Observable.fromEvent(dom, 'myevent')
   .filter(identity)
 
-myObserable.subscribe((item) => {
+myObserable$.subscribe((item) => {
   console.log(item)
 })
 ~~~
@@ -39,7 +39,7 @@ myObserable.subscribe((item) => {
 const myObservable$ = Rx.Observable.fromEvent(dom, 'click')
     .map((e) => ({event: e}))
 
-myObservable.subscribe((e) => {
+myObservable$.subscribe((e) => {
   console.log(e)
 })
 ~~~
@@ -56,13 +56,13 @@ e-->-----------e -->----------e--->--------->
 ~~~
 
 
-这里需要预先说明，RxJS的事件流为`冷模式`的, 也就如果一个observable对象没有subscribe, 那么他将不会处理事件流，只有subscribe后才会真正的开始工作。 可能乍一想没什么问题，不过如果你想借助一些其他operator执行一些副作用函数来解决你的问题，可能你的subscribe压根就没用，这时候如果你懒得subscribe，这时候的事件流将不会工作。
+这里需要预先说明，RxJS的事件流为`冷模式`的, 也就如果一个observable对象没有subscribe, 那么他将不会处理事件流，只有subscribe后才会真正的开始工作。 可能乍一想没什么问题，不过如果你想借助一些其他operator执行一些副作用函数来解决你的问题，可能你的subscribe压根就没用，这时候如果你懒得subscribe，那么你的事件流将不会工作。
 
 ## switchMap
 
 `switchMap` 基本功能和`map`一样， 如果我们的变换函数是个同步函数他们的功能完全一样，switchMap是为了解决异步变换而出现的。
 
-假设我们的界面上有个刷新按钮，点一下就会重新获取一个大表格的数据，这些数据请求由于网络原因可能比较慢，所以时间都比较久。有个问题是如果我们点击了刷新按钮，在数据还没有返回之前又点击了一次, 这时候传统的方法直接渲染请求结果可能导致不正确的现象，因为可能数据实时变化导致历史数据就显示到了屏幕上。
+假设我们的界面上有个刷新按钮，点一下就会重新获取一个大表格的数据，这些数据请求由于网络原因可能比较慢，所以时间都比较久。有个问题是如果我们点击了刷新按钮，在数据还没有返回之前又点击了一次, 这时候传统的方法直接渲染请求结果可能导致不正确的现象，因为可能数据实时变化导致历史数据显示到了屏幕上。
 
 我们借助RxJS来帮我们实现这个功能。 用到的operator为switchMap.
 
@@ -108,7 +108,8 @@ exhaustMap 让我们防并发请求的逻辑中解耦了，可以非常优雅地
 
 ## buffer
 
-buffer 是一类缓冲区operator, 相应的变体有`bufferTime`, `bufferCount`, `bufferTpgg;e`.
+buffer 是一类缓冲区operator, 相应的变体有`bufferTime`, `bufferCount`, `bufferToggle`.
+
 RxJS也提供了`debounce`和`throttle`两个操作，如果之前你使用过这两个函数也可以直接在RxJS中使用。但是`debounce`和`throttle`分别是处理一段时间内最后一个与第一个请求，他们会丢掉非截止时间的其他所有请求。 如果每个事件都是有效的，那么就需要借助buffer来处理了。
 
 buffer可以收集一段时间内的所有事件，并且将它传入下一个operator, 参数是事件的数组。
@@ -129,17 +130,22 @@ scan((acc, item) => newacc)
 
 acc 为上次scan结束时的值，newacc是本次计算的值，并且传入下一个operator.
 
+如果想像reduce一样设置一个起始值，可以在scan之前设置一个`startWith(0)`
+
 例如我有个事件会输出1,2,3
 
 ~~~
  myobservable$.scan((acc, item) => acc * item)
-     .map((newacc) => {result: newacc})
+     .startWith(1)
+     .scan((newacc) => {result: newacc})
      .subscribe(console.log)
 ~~~
 
 ## 组合应用
 
-说operator有点累了，RxJS提供了很多抽象的operator, 使用的时候基本上都会再去看一遍，根据2.8原则 常用的就那几个。 开始说过，如果一个异步行为无法用RxJS描述，那么有可能是你还不会用`RxJS`
+说operator有点累了，RxJS提供了很多抽象的operator, 使用的时候基本上都会再去看一遍，根据2.8原则 常用的就那几个。
+
+开始说过，如果一个异步行为无法用RxJS描述，那么有可能是你还不会用`RxJS`
 
 下面来点高级点的组合应用:
 
@@ -147,7 +153,7 @@ acc 为上次scan结束时的值，newacc是本次计算的值，并且传入下
 
 收集用户所有的点击事件，直到出现一个200ms的间隔。
 
-想象一下你设计的一个游戏，触摸屏幕上不同位置即可出现一个魔法轮，你点击的越快出现的越多，为了不让自己受伤你不能无限地触发魔法，因为可能敌方会对你进行攻击。这时候你突然止手这时候就认为这是一个发射魔法的事件，此时魔法轮开始向目标飞去。然后不断重复此循环。
+想象一下你设计的一个游戏，触摸屏幕上不同位置即可出现一个魔法轮，你点击的越快出现的越多，为了不让自己受伤你不能无限地触发魔法，因为可能敌方会对你进行攻击。这时候你突然止手就认为这是一个发射魔法的事件，此时魔法轮开始向目标飞去。然后不断重复此循环。
 
 代码:
 
