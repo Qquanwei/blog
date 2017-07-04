@@ -1,7 +1,7 @@
 ---
 layout: post
 title: FP/FRP 内部分享 slide
-image: FP_FRP_SLIDE
+image: FP_FRP_SLIDE.png
 ---
 
 上次内部分享了一次FP/FRP，PPT地址
