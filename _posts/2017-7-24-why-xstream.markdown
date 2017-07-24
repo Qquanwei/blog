@@ -10,7 +10,7 @@ xstream好处:
 
 1. 精简的operator:
 
-rxjs5发布的时候已经有了175+个operator, 根据二八原则有大部分是我们用不到的，所以`André Staltz`(xstream作者) 做了一项问卷调查发现大约有26个poerator是常用的, 例如`map`, `filter`,`combine`,`take`等, 这些常用的operator被集成到了xstream默认operator中, 从而精简了大量operator带来的噪音。 如果需要更多的operator可以在`xstream/extra`中找到.
+rxjs5发布的时候已经有了175+个operator, 根据二八原则有大部分是我们用不到的，所以`André Staltz`(xstream作者) 做了一项问卷调查发现大约有26个operator是常用的, 例如`map`, `filter`,`combine`,`take`等, 这些常用的operator被集成到了xstream默认operator中, 从而精简了大量operator带来的噪音。 如果需要更多的operator可以在`xstream/extra`中找到.
 
 2. 更加符合直觉的命名
 
