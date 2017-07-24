@@ -23,4 +23,4 @@ RxJS 与Rx.NET是一脉相承的，所以命名上是相统一的，但是这些
 
 TL;DR:
 
-xstream诞生是因为在cycle.js中需要一种更加轻量的响应式框架, 以及更加容易使用和对新手更友好, 相对而言xstream上手比较容易(例如rxjs中combineLatest被rename成combine), 但是矛盾的是xstream的文档部分略有不足。
+xstream诞生是因为在cycle.js中需要一种更加轻量的响应式框架, 以及更加容易使用和对新手更友好, 相对而言xstream上手比较容, 例如rxjs中combineLatest被rename成combine,do 被rename成 debug,理解起来就会压力小很多。 但是矛盾的是xstream的文档部分略有不足。
