@@ -57,7 +57,7 @@ recycle 检测到使用了redux之后会去处理dispatch的数据源，
 我们事件流的源头往往是基于 事件/props/timer 这些, sources就是提供了一个方便我们
 订阅的对象集合。 它里面包含下面的结构
 
-```
+```javascript
 {
   select,
   selectClass,
@@ -76,7 +76,7 @@ recycle 检测到使用了redux之后会去处理dispatch的数据源，
 
 select用于根据元素类型进行原则，不仅支持原声的dom元素类型还支持自定义类型。 例如下面这样
 
-```
+```javascript
 import MyComponent from 'mycomponent'
 
 export default recycle({
@@ -104,3 +104,54 @@ export default recycle({
 
 
 ## 一些实际例子
+### 完整的计数器例子，加减都通过服务器完成，需要前端保持事务性
+
+由于计算是服务端完成，所以前端尽量需要保持同时只进行一次请求， 若不然会造成错乱现象。
+
+``` javascript
+import recycle from 'recycle'
+import rx from 'rxjs'
+
+// Add :: Number a => count -> a
+import { Add } from './actions'
+
+const Component = recycle({
+    effects(sources) {
+        const add$ = sources.selectClass('.add')
+                            .addListener('onClick')
+                            .mapTo(1)
+
+        const dec$ = sources.selectClass('.dec')
+                            .addListener('onClick')
+                            .mapTo(-1)
+        return [
+            rx.race(add$, dec$)
+              .withLatestFrom(sources.props)
+              .exhaustMap(([count, props]) => {
+                  return props.dispatch(Add(count))
+              })
+        ]
+    },
+    view (props) {
+        return (
+            <div>
+                <h1>{ props.count }</h1>
+                <div className="add">加</div>
+                <div className="dec">减</div>
+            </div>
+        )
+    }
+})
+
+
+function mapStateToProps (state) {
+    return { count : state.count }
+}
+function mapDispatchToProps (dispatch) {
+    return { dispatch}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Component)
+```
+
+
+###
