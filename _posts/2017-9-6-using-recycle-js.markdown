@@ -37,12 +37,12 @@ export default recycle({
 
 * update(sources)
 
-主要用于更新state, 数据源最终返回的是新state， 最终被setState所订阅
+主要用于更新state, 数据源需要返回新state， 最终被setState所订阅
 
 * dispatch(sources)
 
 recycle 检测到使用了redux之后会去处理dispatch的数据源，
-每个数据源直接返回action，被store.dispatch所订阅
+每个数据源直接返回action/function，被store.dispatch所订阅
 
 * effects(sources)
 
@@ -50,7 +50,7 @@ recycle 检测到使用了redux之后会去处理dispatch的数据源，
 
 
 这几个函数用于生成不同目的事件流， 只有effects所产生的副作用是不可预期的， 但是也是
-最强大的， 例如在处理一个thunk时简单使用dispatch往往达不到我们的效果。
+最灵活的。
 
 ## sources
 
@@ -73,7 +73,7 @@ recycle 检测到使用了redux之后会去处理dispatch的数据源，
 
 * lifecycle
 
-会按照实际组件生命周期产生字符串: `componentDidMount` -> `componentDidUpdate` -> `componentWillUnmount`
+会按照实际组件生命周期产生下面三个字符串: `componentDidMount` -> `componentDidUpdate` -> `componentWillUnmount`
 
 * state
 
@@ -89,7 +89,7 @@ recycle 检测到使用了redux之后会去处理dispatch的数据源，
 
 ## 简单介绍一下select
 
-select用于根据元素类型进行原则，不仅支持原声的dom元素类型还支持自定义类型。 例如下面这样
+select用于根据元素类型进行原则，不仅支持原生的dom元素类型还支持自定义类型。 例如下面这样
 
 ```javascript
 import MyComponent from 'mycomponent'
@@ -113,9 +113,9 @@ export default recycle({
 
 ```
 
-在effects中我们直接使用MyComponent进行选择， 然后监听其自定义事件`onSubmit`， recycle会在运行时收集所有的本view函数中渲染的组件对象， 然后找出所有select中对应的组件, 并且给其添加`onSubmit`事件。 所以虽然我们没有在view中绑定onSubmit，但是在实际渲染的时候MyComponent是已经绑定了onSubmit的。
+这里的effects中直接使用MyComponent进行选择， 然后监听其自定义事件`onSubmit`， recycle会在运行时收集所有的本view函数中渲染的组件对象， 然后找出所有select中对应的组件, 并且给其添加`onSubmit`事件。 所以虽然我们没有在view中绑定onSubmit，但是在实际渲染的时候MyComponent是已经绑定了onSubmit的。
 
-由sources提供的这几个observable已经足够我们日常所需了。
+sources提供的这几个observable基本上已经足够我们日常所需了。
 
 
 ## 完整的计数器例子，加减都通过服务器完成，需要前端保持事务性
