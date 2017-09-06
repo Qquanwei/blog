@@ -3,10 +3,10 @@ layout: post
 title: recycle 初步使用介绍。
 ---
 
-recycle是react的一个组件类,灵感来源于cycle, 目的是提供了一个基于事件流的组件。 在cycle中一切的数据源都是observable, recycle由于是兼容原始react组件所以没那么严格， 只是将数据源封装的更像是一个observable。
+recycle是react+rxjs的一个组件类,灵感来源于cycle, 目的是提供了一个基于事件流的组件。 在cycle中一切的数据源都是observable, recycle由于是兼容原始react组件所以没那么严格， 只是将数据源封装的更像是一个observable。
 
 
-```
+```javascript
 import recycle from 'recycle'
 
 export default recycle({
@@ -49,7 +49,8 @@ recycle 检测到使用了redux之后会去处理dispatch的数据源，
 返回由用户自定义的一个事件源， 每个事件源最终都会被订阅， 但订阅的内容将会被忽略。
 
 
-这几个函数用于生成不同目的事件流， 只有effects所产生的副作用是不可预期的。
+这几个函数用于生成不同目的事件流， 只有effects所产生的副作用是不可预期的， 但是也是
+最强大的， 例如在处理一个thunk时简单使用dispatch往往达不到我们的效果。
 
 ## sources
 
