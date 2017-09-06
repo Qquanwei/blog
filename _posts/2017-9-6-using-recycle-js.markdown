@@ -69,10 +69,25 @@ recycle 检测到使用了redux之后会去处理dispatch的数据源，
 }
 ```
 
-其中除了`select`,`selectClass`,`selectId`之外其余的几个属性全部都是observable, 可以
-直接订阅。
+其中除了`select`,`selectClass`,`selectId`之外其余的几个属性全部都是observable, 可以直接订阅。
 
-简单介绍一下select:
+* lifecycle
+
+会按照实际组件生命周期产生字符串: `componentDidMount` -> `componentDidUpdate` -> `componentWillUnmount`
+
+* state
+
+每次render都会触发， 如有需要加上必要的distinct
+
+* props
+
+每次render都会触发
+
+* store
+
+订阅的redux store，只有store修改的时候才会触发。 该store为全局store。
+
+## 简单介绍一下select
 
 select用于根据元素类型进行原则，不仅支持原声的dom元素类型还支持自定义类型。 例如下面这样
 
@@ -103,8 +118,7 @@ export default recycle({
 由sources提供的这几个observable已经足够我们日常所需了。
 
 
-## 一些实际例子
-### 完整的计数器例子，加减都通过服务器完成，需要前端保持事务性
+## 完整的计数器例子，加减都通过服务器完成，需要前端保持事务性
 
 由于计算是服务端完成，所以前端尽量需要保持同时只进行一次请求， 若不然会造成错乱现象。
 
@@ -152,6 +166,3 @@ function mapDispatchToProps (dispatch) {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Component)
 ```
-
-
-###
