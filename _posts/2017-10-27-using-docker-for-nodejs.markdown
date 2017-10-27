@@ -78,11 +78,11 @@ win下使用docker进行node的开发。
 上面三个命令就是今后将会一直执行的操作。可以很方便地启动暂停。由于container没有被自动清除，所以之后你可以在任何时候启动这个容器。（完全不用担心端口被占用的问题，stop/restart会很好地释放这些资源）
 
 
-## 小技巧
+# 小技巧
 
 * 因为不仅仅是这个容器的启动与执行，有时候添加依赖和执行其他的程序也需要用到容器，每次都需要输一段非常长的代码去执行很不方便。例如这个`> docker run --rm -v /e/git/projectA:/app -w /app my-node-env npm install` 我想执行`npm install somePackage`怎么办?
 
-可以给自己的shell自定义函数来解决，自动绑定目录, 或者自动绑定端口。由于我使用emacs的eshell，可以很方便地添加一个函数
+可以给自己的shell自定义函数来解决，自动绑定目录, 或者自动绑定端口。我使用的是emacs的eshell，可以很方便地添加一个函数
 
 ```(lisp)
 (defun eshell/drun (&rest args)
@@ -130,8 +130,8 @@ options
 
 * 为什么在localhost:8080上访问不到应用程序?
 
-首先需要弄明白一点，docker并不是真正跑在windows上的，目前之后linux才原生支持资源虚拟化，所以非linux平台都是使用虚拟机上的Linux系统跑docker-deamon。所以真正的端口绑定发生在 `Linux虚拟机 <--> Linux虚拟机内的容器`, 你去请求Windows的localhost:8080是请求不到的。
+首先需要弄明白一点，docker并不是真正跑在windows上的，目前只有linux才原生支持资源虚拟化，所以非linux平台都是使用虚拟机上的Linux系统跑docker-deamon。所以真正的端口绑定发生在 `Linux虚拟机 <--> Linux虚拟机内的容器`, 你去请求Windows的localhost:8080是请求不到的。
 
 可以使用`docker-machine`来很方便地获取到Linux虚拟机的ip，直接访问虚拟机地址:端口就好。
 
-关于docker-machine建议了解一下 (地址)[https://docs.docker.com/machine/concepts/#default-base-operating-systems-for-local-and-cloud-hosts]
+关于docker-machine建议了解一下 [地址](https://docs.docker.com/machine/concepts/#default-base-operating-systems-for-local-and-cloud-hosts)
