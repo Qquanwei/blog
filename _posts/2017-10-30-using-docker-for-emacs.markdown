@@ -12,13 +12,14 @@ title: 在docker中使用emacs
 * docker-toolbox
 * xming
 
-xming是一个win下的x－server， 使用xming可以让docker内的程序连接外部的图形x环境进行程序的显示。
+xming是一个win下的x-server， 使用xming可以让docker内的程序连接外部的图形x环境进行程序的显示。
 
-＃ 定义docker
+
+# 定义docker
 
 使用ubuntu定制一个image
 
-(shell)
+```(shell)
 > docker image ubuntu
 > docker run -it --name build-emacs ubuntu bash
 
@@ -26,8 +27,9 @@ xming是一个win下的x－server， 使用xming可以让docker内的程序连�
 >> // install custom emacs configure
 >> // install git/wget/curl/nano
 >> // install ...
+```
 
-## 让容器中文字体
+## 让容器显示中文字体
 
 编辑`～/.profile`, 放入下面的配置
 
