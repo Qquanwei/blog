@@ -73,6 +73,7 @@ win下使用docker进行node的开发。
 > docker start site   // 启动容器
 > docker stop site    // 停止容器
 > docker restart site // 重启容器
+> docker attach site  // 关联容器
 ```
 
 上面三个命令就是今后将会一直执行的操作。可以很方便地启动暂停。由于container没有被自动清除，所以之后你可以在任何时候启动这个容器。（完全不用担心端口被占用的问题，stop/restart会很好地释放这些资源）
