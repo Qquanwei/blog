@@ -53,7 +53,7 @@ xming是一个win下的x-server， 使用xming可以让docker内的程序连接�
 > docker create --name demacs -e DISPLAY=<HOSTIP>:0 -v m-project/:/git -w /git emacs emacs25
 ```
 
-* <HOSTIP> 为为宿主机的地址, 这里的环境变量指定了x-server的地址，这样启动emacs时就可以知道连接到哪里了。
+* `<HOSTIP>` 为宿主机的地址, 这里的环境变量指定了x-server的地址，这样启动emacs时就可以知道连接到哪里了。
 
 ```(shell)
 > docker start demacs
