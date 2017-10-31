@@ -10,7 +10,7 @@ title: 在docker中使用emacs
 # prepare
 
 * docker-toolbox
-* xming
+* xming (或者使用VcXsrc，专门为windows编译生成的版本，支持本地opengl渲染，能更好地渲染字体)
 
 xming是一个win下的x-server， 使用xming可以让docker内的程序连接外部的图形x环境进行程序的显示。
 
