@@ -9,14 +9,14 @@ title: 同步org文件
 
 
 
-* windows
+## windows
 
 最近对windows好感度up，因为借住docker的力量使得开发非常有感觉。
 
 - docker 下跑 dropbox 同步 dropbox-sync volume
 - docker 下跑 emacs 挂载 dropbox-sync
 
-* ios
+## ios
 
 - beorg
 
