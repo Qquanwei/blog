@@ -15,7 +15,7 @@ title: 在docker中使用emacs
 xming是一个win下的x-server， 使用xming可以让docker内的程序连接外部的图形x环境进行程序的显示。
 
 
-# 定义docker
+# 定制docker
 
 使用ubuntu定制一个image
 
