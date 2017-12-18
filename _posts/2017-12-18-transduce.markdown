@@ -32,7 +32,7 @@ Ramdav0.12.0引入了transduce, 主要是解决了reduce中函数复用的问题
 
 ## combine map & filter
 
-为了化简map和filter,可以先将map和filter写成reduce的实现
+为了化简成一次列表操作, 我们需要将map,filter,reduce写成一个统一的形式(这样才能产生逻辑组合的可能)。根据以往的经验我们知道map和filter可以写成reduce的实现。
 
 ```(javascript)
 const mapReducer = f => (acc, x) => {
@@ -54,9 +54,11 @@ numbers
 
 
 
-将其中的折叠操作抽出来(fold function)
+将其中的折叠操作抽出来(fold function), 折叠函数是reduce执行的一个必要环节, 主要用来进行累积操作。
 
 ```(javascript)
+const concat = (acc, x) => acc.concat(x);
+
 const mapping = f => fold => (acc, x) => {
     const value = f(x);
     const result = fold(acc, x);
@@ -74,13 +76,13 @@ numbers
     .reduce(accF, 0)
 ```
 
-上面代码中的 mapping, filtering 中第二个折叠操作的函数指纹如下
+上面代码中的 mapping, filtering 折叠操作的函数指纹如下
 
 ```
-    fold = (acc, x) => newacc
+    fold = (acc, value) => newacc
 ```
 
-可以看到mapping,filter的尾部也满足这个函数指纹, 为了方便我们定义一个类型表示fold类型 `FoldFunction`, 用下面的伪代码重新描述mapping, filtering
+另外也可以看到mapping,filtering的尾部也满足这个函数指纹`(acc,x) => newacc`, 为了方便我们定义一个类型表示fold类型 FoldFunction, 用下面的伪代码重新描述mapping, filtering
 
 ```
 mapping = f => FoldFunction => FoldFunction
@@ -90,8 +92,8 @@ filtering = p => FoldFunction => FoldFunction
 所以此时
 
 ```
-mapping(addOne, concat) 返回一个FoldFunction
-filtering(isOdd, concat) 返回一个FoldFunction
+mapping(addOne, concat) 可当成一个新FoldFunction
+filtering(isOdd, concat) 也可以当成一个新FoldFunction
 ```
 
 这样就给了我们组合mapping, filtering的可能。
