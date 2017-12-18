@@ -138,3 +138,9 @@ filtering(isOdd, concat) 也可以当成一个新FoldFunction
     numbers
   )
 ```
+
+
+## 备注
+
+* ramda 中transduce会自动将ramda.map, ramda.filter, ramda.take 翻译成对应的mapping , filtering, taking 函数.
+* ramda 中transduce会改变 [ramda.compose 执行顺序从左到右](http://isaaccambron.com/blog/2014/12/13/transducer-composition.html)
