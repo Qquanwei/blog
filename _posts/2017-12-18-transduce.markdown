@@ -61,7 +61,7 @@ const concat = (acc, x) => acc.concat(x);
 
 const mapping = f => fold => (acc, x) => {
     const value = f(x);
-    const result = fold(acc, x);
+    const result = fold(acc, value);
     return result;
 }
 
