@@ -37,7 +37,7 @@ Ramdav0.12.0引入了transduce, 主要是解决了reduce中函数复用的问题
 ```(javascript)
 const mapReducer = f => (acc, x) => {
     const value = f(x);
-    const result = concat(acc, x);
+    const result = concat(acc, value);
     return result;
 }
 
