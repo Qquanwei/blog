@@ -1,35 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
 
-  {% include head.html %}
+    {% include head.html %}
 
-  <body class="{{ page.body_class }}">
-    {{ content }}
+    <body>
 
-    {{ if site.logo}}
-    <a href="{{ site.baseurl | prepend: site.url }}" id="blog_badge">
-            <span style="background-image:
-            url('{{ site.baseurl }}/assets/images/{{ site.logo }}');">{{ site.name }}</span>
-        </a>
-    {{/if}}
+        {% include header.html %}
 
-        <script>
-         function no_schema_links () {
-           var links = document.querySelectorAll('.js-remove-domain-schema');
-           if (links) {
-             for (i = 0; i < links.length; ++i) {
-               var link = links[i],
-                   text = link.innerHTML,
-                   no_schema = text.replace(/.*?:\/\//g, "");
-               link.innerHTML = no_schema;
-             }
-           }
-         }
+        <main class="page-content" aria-label="Content">
+            <div class="wrapper">
+                {{ content }}
+            </div>
+        </main>
 
-         window.onload = function () {
-           no_schema_links();
-         }
-        </script>
-  </body>
+        {% include footer.html %}
+
+    </body>
 
 </html>

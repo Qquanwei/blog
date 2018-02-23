@@ -1,0 +1,8 @@
+$tag-gray: #666;
+$tag-font-size: 12px;
+
+.tag-normal {
+    color: $tag-gray;
+    font-size: $tag-font-size;
+    font-style: italic;
+}

@@ -1,0 +1,10 @@
+* 我的博客
+
+  支持 org-mode, yml 格式。
+
+** start
+
+   #+BEGIN_SRC shell
+     bundle install
+     bundle exec jekyll serve
+   #+END_SRC
