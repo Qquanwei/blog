@@ -25,7 +25,6 @@ theme: minima
 host: 0.0.0.0
 plugins:
   - jekyll-org
-  - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
