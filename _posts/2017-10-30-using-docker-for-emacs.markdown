@@ -20,7 +20,7 @@ xming是一个win下的x-server， 使用xming可以让docker内的程序连接�
 使用ubuntu定制一个image
 
 ```(shell)
-> docker image ubuntu
+> docker pull ubuntu
 > docker run -it --name build-emacs ubuntu bash
 
 >> // install emacs25
