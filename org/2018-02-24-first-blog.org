@@ -1,0 +1,24 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 切换成 org-mode 写博客
+---
+#+END_HTML
+
+今后写博客都切换成org-mode了. 使用的方案是官方的 [[https://orgmode.org/worg/org-tutorials/org-jekyll.html][org-publish]]
+
+目前存在的问题:
+
+- [ ] 无法解析headline
+- [ ] 语法高亮功能缺失
+
+#+BEGIN_SRC python :exports both :results output
+  import sys
+
+  print(sys.version)
+
+#+END_SRC
+
+#+RESULTS:
+: 2.7.9 (default, Jun 29 2016, 13:08:31)
+: [GCC 4.9.2]
