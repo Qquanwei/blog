@@ -1,0 +1,72 @@
+#+BEGIN_HTML
+---
+layout: post
+title: emacs 配置 lsp-vue
+---
+#+END_HTML
+
+
+[[https://langserver.org/][lsp]] (language server protocol) 让emacs也能借助强大的外部工具提供语法建议。之前使用的vue补全后端效果都不是很好，无论是基于[[https://github.com/ternjs/tern][ tern]] 还是基本的abbr模式都无法基于正确的上下文给出建议。
+
+配置lsp-vue依赖下面几个插件
+
+
+  | 插件名称           | 介绍                                                                     |
+  |--------------------+--------------------------------------------------------------------------|
+  | [[https://github.com/emacs-lsp/lsp-vue][vetur]]              | vls: vue language server. 原本是vscode的一个plugin, 这里只使用vetur的vls |
+  | [[https://github.com/emacs-lsp/lsp-vue][lsp-vue]]            | emacs lsp-vue-client 依赖 lsp-mode                                       |
+  | [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]           | emacs lsp-mode                                                           |
+  | [[https://github.com/tigersoldier/company-lsp][company-lsp]]        | emacs company backend                                                    |
+  | [[https://github.com/expez/company-quickhelp][company-quick-help]] | 用于友好地显示javascript提示信息                                         |
+  | [[https://github.com/fxbois/web-mode][web-mode]]           | 编辑vue代码的主模式，提供基础语法高亮，缩进等支持                        |
+
+
+这里使用web-mode作为主模式而不是vue-mode, 原因是因为vue-mode是基于mmm-mode进行不同代码块切换不同mode的原理，使用时往往会有各种问题，无法提供一种顺滑的编程体验.
+
+## 安装 vetur
+
+#+BEGIN_SRC shell
+  npm install vue-language-server --global
+#+END_SRC
+
+## 安装 lsp-vue company-lsp lsp-mode
+
+#+BEGIN_SRC emacs-lisp
+
+  (use-package lsp-vue :ensure)
+  (use-package lsp-mode :ensure)
+
+  (use-package company-quickhelp :ensure)
+  (use-package company-lsp
+    :ensure
+    :config
+    ;; 开启yasnippet支持
+    (setq company-lsp-enable-snippet t))
+
+  (use-package company
+    :ensure
+    :config
+    (setq company-minimum-prefix-length 1)
+    (setq company-dabbrev-downcase nil)
+    (setq company-idle-delay 0.5)
+    (setq company-idle-delay 0.5)
+    (add-hook 'company-mode-hook 'company-quickhelp-mode)
+    (add-to-list 'company-backends 'company-lsp))
+
+
+  (use-package web-mode
+    :ensure
+    :init
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+    :config
+    (add-hook 'web-mode-hook 'company-mode)
+    (add-hook 'web-mode-hook 'lsp-vue-enable))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+配置完成之后，输入一个字符触发company的补全即可看到补全结果.
+
+[[file: /images/emacs-lsp-vue.png]]

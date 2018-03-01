@@ -1,0 +1,124 @@
+---
+layout: post
+title: emacs 配置 lsp-vue
+---
+
+
+<p>
+<a href="https://langserver.org/">lsp</a> (language server protocol) 让emacs也能借助强大的外部工具提供语法建议。之前使用的vue补全后端效果都不是很好，无论是基于<a href="https://github.com/ternjs/tern"> tern</a> 还是基本的abbr模式都无法基于正确的上下文给出建议。
+</p>
+
+<p>
+配置lsp-vue依赖下面几个插件
+</p>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">插件名称</th>
+<th scope="col" class="left">介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><a href="https://github.com/emacs-lsp/lsp-vue">vetur</a></td>
+<td class="left">vls: vue language server. 原本是vscode的一个plugin, 这里只使用vetur的vls</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://github.com/emacs-lsp/lsp-vue">lsp-vue</a></td>
+<td class="left">emacs lsp-vue-client 依赖 lsp-mode</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://github.com/emacs-lsp/lsp-mode">lsp-mode</a></td>
+<td class="left">emacs lsp-mode</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://github.com/tigersoldier/company-lsp">company-lsp</a></td>
+<td class="left">emacs company backend</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://github.com/expez/company-quickhelp">company-quick-help</a></td>
+<td class="left">用于友好地显示javascript提示信息</td>
+</tr>
+
+<tr>
+<td class="left"><a href="https://github.com/fxbois/web-mode">web-mode</a></td>
+<td class="left">编辑vue代码的主模式，提供基础语法高亮，缩进等支持</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+这里使用web-mode作为主模式而不是vue-mode, 原因是因为vue-mode是基于mmm-mode进行不同代码块切换不同mode的原理，使用时往往会有各种问题，无法提供一种顺滑的编程体验.
+</p>
+
+<p>
+## 安装 vetur
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-shell">npm install vue-language-server --global
+</pre>
+</div>
+
+<p>
+## 安装 lsp-vue company-lsp lsp-mode
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(use-package lsp-vue :ensure)
+(use-package lsp-mode :ensure)
+
+(use-package company-quickhelp :ensure)
+(use-package company-lsp
+  :ensure
+  :config
+  ;; 开启yasnippet支持
+  (setq company-lsp-enable-snippet t))
+
+(use-package company
+  :ensure
+  :config
+  (setq company-minimum-prefix-length 1)
+  (setq company-dabbrev-downcase nil)
+  (setq company-idle-delay 0.5)
+  (setq company-idle-delay 0.5)
+  (add-hook 'company-mode-hook 'company-quickhelp-mode)
+  (add-to-list 'company-backends 'company-lsp))
+
+
+(use-package web-mode
+  :ensure
+  :init
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+  :config
+  (add-hook 'web-mode-hook 'company-mode)
+  (add-hook 'web-mode-hook 'lsp-vue-enable))
+</pre>
+</div>
+
+<p>
+配置完成之后，输入一个字符触发company的补全即可看到补全结果.
+</p>
+
+
+<div class="figure">
+<p><img src=" /images/emacs-lsp-vue.png" alt="emacs-lsp-vue.png" />
+</p>
+</div>
