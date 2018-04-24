@@ -8,10 +8,7 @@ title: 重新学习下RxJS
 </p>
 
 
-<p>
-Observable
-</p>
-
+<h2> Observable </h2>
 <p>
 一个`Observable`是一个可被观察的对象, 往往充当数据源的操作, 数据源可能来自事件(EventEmitter)/WebSocket/HttpResponse等。数据源是不可修改的, 就像Promise, 本身表示的就是一个连续事情本身.
 </p>
@@ -37,10 +34,7 @@ ScalarObservable { _isScalar: true, value: 1, scheduler: null }
 这里打印了一个`ScalarObservable`表示是一个只有一个简单值的Observable. 同时看到订阅后`Observable`直接打印出来了, 所以不能将它当作一个Monad使用.
 </p>
 
-
-<p>
-Observer
-</p>
+<h2>Oberver</h2>
 
 <p>
 `Observer`表示观察者, 可被subscribe. 可以用鸭子类型填充.
@@ -75,9 +69,8 @@ ob$.subscribe(myObserver);
 &lt;complete&gt; -&gt; undefined
 </pre>
 
-<p>
-Subject
-</p>
+<h2>Subject</h2>
+
 
 <p>
 一个Subject即是Observable也是Observer. 通常用于实现广播的操作, 主要是为了下面这个问题而出现
@@ -87,72 +80,33 @@ Subject
 
 <pre class="src src-js">const Rx = require('rxjs');
 
-const ob$ = Rx.Observable
-      .interval(100)
-      .take(3)
-      .do((value) =&gt; {
-          console.log('side effect:', value);
-      });
+const ob$ = Rx.Observable.interval(100).take(3)
+      .do(() =&gt; console.log('side effect'))
 
 ob$.subscribe((value) =&gt; {
-    console.log('A: ', value);
+    console.log('A:', value);
 });
 
 ob$.subscribe((value) =&gt; {
-    console.log('B: ', value);
+    console.log('B:', value);
 });
 </pre>
 </div>
 
 <p>
-=side effect: 0
-A:  0
-side effect: 0
-B:  0
-side effect: 1
-A:  1
-side effect: 1
-B:  1
-side effect: 2
-A:  2
-side effect: 2
-B:  2
-=   :side effect: 0
+side effect
+A: 0
+side effect
+B: 0
+side effect
+A: 1
+side effect
+B: 1
+side effect
+A: 2
+side effect
+B: 2
 </p>
-<p>
-:A:  0
-</p>
-<p>
-:side effect: 0
-</p>
-<p>
-:B:  0
-</p>
-<p>
-:side effect: 1
-</p>
-<p>
-:A:  1
-</p>
-<p>
-:side effect: 1
-</p>
-<p>
-:B:  1
-</p>
-<p>
-:side effect: 2
-</p>
-<p>
-:A:  2
-</p>
-<p>
-:side effect: 2
-</p>
-<p>
-:B:  2
-</p>
-
 
 <p>
 这里ob$被订阅了两次，发现`side effect`也跟着每次执行两遍. 在通常情况下这都不是我们想要的广播操作. Observable会每次subscribe后从头到尾执行一遍所有操作.
@@ -217,9 +171,7 @@ B -&gt; 2
 </pre>
 </div>
 
-<p>
-BehaviorSubject
-</p>
+<h2>BehaviorSubject</h2>
 
 <p>
 基本功能与Subject类似, 但是BehaviorSubject会保留最后一次的值给订阅者, 初始化时会有一个默认的初始值.
@@ -229,10 +181,7 @@ BehaviorSubject
 例如一个连续的1&#x2014;2&#x2014;3&#x2014;|事件流，如果订阅者在2,3之间开始订阅,则订阅者第一次会收到上一次的值,也就是2.
 </p>
 
-<p>
-ReplaySubject
-</p>
-
+<h2>ReplaySubject</h2>
 <p>
 会将所有历史值都保存下来, 并在订阅时依次触发.(microtask 同步)
 </p>
@@ -287,10 +236,7 @@ replay subject: 4
 behavior subject: 4
 </pre>
 
-<p>
-Scheduler
-</p>
-
+<h2>Scheduler</h2>
 <p>
 观察一下下面代码的输出
 </p>
@@ -366,10 +312,7 @@ Rxjs默认提供了四种类型的scheduler:
 </table>
 
 
-<p>
-Scheduler.async
-</p>
-
+<h3>Scheduler.async</h3>
 <p>
 async是最好理解的一种, 会在下一个MacroTask中执行. 内部实现为setInterval
 </p>
@@ -414,10 +357,7 @@ subscribeOn的第二个参数如果不传默认为0.
 另外这里使用`subscribeOn`用来仅仅影响subscribe的触发时机. 可以用`observeOn`来影响操作符的调度时间.
 </p>
 
-<p>
-Scheduler.asap
-</p>
-
+<h3>Scheduler.asap</h3>
 <p>
 asap类似与async, 不同的是会将当前任务放到MicroTask执行.
 </p>
@@ -442,10 +382,7 @@ A
 B
 </pre>
 
-<p>
-Scheduler.queue
-</p>
-
+<h3>Scheduler.queue</h3>
 <p>
 queue也是同步执行的一种，不同的是内部实现使用的是迭代实现而不是默认的递归
 </p>
@@ -469,18 +406,12 @@ B
 B
 </pre>
 
-<p>
-null
-</p>
-
+<h3>null</h3>
 <p>
 默认的行为，同步调度，内部使用递归实现.
 </p>
 
-<p>
-Hot-Cold模式
-</p>
-
+<h2>Hot-Cold模式</h2>
 <p>
 众所周知Rx的Observable为Code的流，冷模式的流只有订阅了之后才真正开始执行.
 </p>
@@ -513,6 +444,4 @@ after subscribe
 这样好处是只有在有订阅者的时候才开始初始化一些资源.
 </p>
 
-<p>
-切换Observable为Hot模式
-</p>
+<h3>切换Observable为Hot模式</h3>
