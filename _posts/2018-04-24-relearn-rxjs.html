@@ -1,28 +1,3 @@
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. Observable</a></li>
-<li><a href="#sec-2">2. Observer</a></li>
-<li><a href="#sec-3">3. Subject</a></li>
-<li><a href="#sec-4">4. BehaviorSubject</a></li>
-<li><a href="#sec-5">5. ReplaySubject</a></li>
-<li><a href="#sec-6">6. Scheduler</a>
-<ul>
-<li><a href="#sec-6-1">6.1. Scheduler.async</a></li>
-<li><a href="#sec-6-2">6.2. Scheduler.asap</a></li>
-<li><a href="#sec-6-3">6.3. Scheduler.queue</a></li>
-<li><a href="#sec-6-4">6.4. null</a></li>
-</ul>
-</li>
-<li><a href="#sec-7">7. Hot-Cold模式</a>
-<ul>
-<li><a href="#sec-7-1">7.1. 切换Observable为Hot模式</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 ---
 layout: post
 title: 重新学习下RxJS
@@ -33,9 +8,10 @@ title: 重新学习下RxJS
 </p>
 
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Observable</h2>
-<div class="outline-text-2" id="text-1">
+<p>
+Observable
+</p>
+
 <p>
 一个`Observable`是一个可被观察的对象, 往往充当数据源的操作, 数据源可能来自事件(EventEmitter)/WebSocket/HttpResponse等。数据源是不可修改的, 就像Promise, 本身表示的就是一个连续事情本身.
 </p>
@@ -61,13 +37,12 @@ undefined
 <p>
 这里打印了一个`ScalarObservable`表示是一个只有一个简单值的Observable. 同时看到订阅后`Observable`直接打印出来了, 所以不能将它当作一个Monad使用.
 </p>
-</div>
-</div>
 
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> Observer</h2>
-<div class="outline-text-2" id="text-2">
+<p>
+Observer
+</p>
+
 <p>
 `Observer`表示观察者, 可被subscribe. 可以用鸭子类型填充.
 </p>
@@ -100,12 +75,11 @@ ob$.subscribe(myObserver);
 &lt;value&gt; -&gt; 3
 &lt;complete&gt; -&gt; undefined
 </pre>
-</div>
-</div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> Subject</h2>
-<div class="outline-text-2" id="text-3">
+<p>
+Subject
+</p>
+
 <p>
 一个Subject即是Observable也是Observer. 通常用于实现广播的操作, 主要是为了下面这个问题而出现
 </p>
@@ -209,12 +183,11 @@ subject$.subscribe((value) =&gt; {
 }
 </pre>
 </div>
-</div>
-</div>
 
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> BehaviorSubject</h2>
-<div class="outline-text-2" id="text-4">
+<p>
+BehaviorSubject
+</p>
+
 <p>
 基本功能与Subject类似, 但是BehaviorSubject会保留最后一次的值给订阅者, 初始化时会有一个默认的初始值.
 </p>
@@ -222,12 +195,11 @@ subject$.subscribe((value) =&gt; {
 <p>
 例如一个连续的1&#x2014;2&#x2014;3&#x2014;|事件流，如果订阅者在2,3之间开始订阅,则订阅者第一次会收到上一次的值,也就是2.
 </p>
-</div>
-</div>
 
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> ReplaySubject</h2>
-<div class="outline-text-2" id="text-5">
+<p>
+ReplaySubject
+</p>
+
 <p>
 会将所有历史值都保存下来, 并在订阅时依次触发.(microtask 同步)
 </p>
@@ -268,7 +240,7 @@ setTimeout(() =&gt; {
 </pre>
 </div>
 
-<pre class="example">
+<p>
 replay subject: 0
 replay subject: 1
 replay subject: 2
@@ -280,13 +252,23 @@ behavior subject: 3
 normal subject: 4
 replay subject: 4
 behavior subject: 4
-</pre>
-</div>
-</div>
+replay subject: 0
+replay subject: 1
+replay subject: 2
+behavior subject: 2
+-&gt;subscribe done&lt;-
+normal subject: 3
+replay subject: 3
+behavior subject: 3
+normal subject: 4
+replay subject: 4
+behavior subject: 4
+</p>
 
-<div id="outline-container-sec-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> Scheduler</h2>
-<div class="outline-text-2" id="text-6">
+<p>
+Scheduler
+</p>
+
 <p>
 观察一下下面代码的输出
 </p>
@@ -360,11 +342,12 @@ Rxjs默认提供了四种类型的scheduler:
 </tr>
 </tbody>
 </table>
-</div>
 
-<div id="outline-container-sec-6-1" class="outline-3">
-<h3 id="sec-6-1"><span class="section-number-3">6.1</span> Scheduler.async</h3>
-<div class="outline-text-3" id="text-6-1">
+
+<p>
+Scheduler.async
+</p>
+
 <p>
 async是最好理解的一种, 会在下一个MacroTask中执行. 内部实现为setInterval
 </p>
@@ -408,12 +391,11 @@ subscribeOn的第二个参数如果不传默认为0.
 <p>
 另外这里使用`subscribeOn`用来仅仅影响subscribe的触发时机. 可以用`observeOn`来影响操作符的调度时间.
 </p>
-</div>
-</div>
 
-<div id="outline-container-sec-6-2" class="outline-3">
-<h3 id="sec-6-2"><span class="section-number-3">6.2</span> Scheduler.asap</h3>
-<div class="outline-text-3" id="text-6-2">
+<p>
+Scheduler.asap
+</p>
+
 <p>
 asap类似与async, 不同的是会将当前任务放到MicroTask执行.
 </p>
@@ -437,12 +419,11 @@ Rx.Observable.merge(obA$, obB$)
 A
 B
 </pre>
-</div>
-</div>
 
-<div id="outline-container-sec-6-3" class="outline-3">
-<h3 id="sec-6-3"><span class="section-number-3">6.3</span> Scheduler.queue</h3>
-<div class="outline-text-3" id="text-6-3">
+<p>
+Scheduler.queue
+</p>
+
 <p>
 queue也是同步执行的一种，不同的是内部实现使用的是迭代实现而不是默认的递归
 </p>
@@ -465,22 +446,19 @@ B
 B
 B
 </pre>
-</div>
-</div>
 
-<div id="outline-container-sec-6-4" class="outline-3">
-<h3 id="sec-6-4"><span class="section-number-3">6.4</span> null</h3>
-<div class="outline-text-3" id="text-6-4">
+<p>
+null
+</p>
+
 <p>
 默认的行为，同步调度，内部使用递归实现.
 </p>
-</div>
-</div>
-</div>
 
-<div id="outline-container-sec-7" class="outline-2">
-<h2 id="sec-7"><span class="section-number-2">7</span> Hot-Cold模式</h2>
-<div class="outline-text-2" id="text-7">
+<p>
+Hot-Cold模式
+</p>
+
 <p>
 众所周知Rx的Observable为Code的流，冷模式的流只有订阅了之后才真正开始执行.
 </p>
@@ -512,9 +490,7 @@ after subscribe
 <p>
 这样好处是只有在有订阅者的时候才开始初始化一些资源.
 </p>
-</div>
 
-<div id="outline-container-sec-7-1" class="outline-3">
-<h3 id="sec-7-1"><span class="section-number-3">7.1</span> 切换Observable为Hot模式</h3>
-</div>
-</div>
+<p>
+切换Observable为Hot模式
+</p>
