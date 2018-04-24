@@ -314,45 +314,70 @@ title: 重新学习下RxJS
 #+BEGIN_HTML
 <h3>Scheduler.queue</h3>
 #+END_HTML
-    queue如果不传参数也是同步执行的一种，不同的是内部实现使用的是迭代实现而不是默认的递归.
+    queue如果不传参数也是同步执行的一种，不同的是内部实现使用的是循环实现而不是默认的递归.
+
+    默认的方式(null):
 
     #+BEGIN_SRC js :results output :exports both
       const Rx = require('rxjs');
 
-      const a$ = Rx.Observable.from([1,2,3])
-            .mapTo('A')
+      const a$ = Rx.Observable.of('a1','a2').do(console.log);
+      const b$ = Rx.Observable.of('b1','b2').do(console.log);
+      const c$ = Rx.Observable.of('c1','c2').do(console.log);
 
-      const b$ = Rx.Observable.from([1,2,3])
-            .mapTo('B')
-            .subscribeOn(Rx.Scheduler.queue)
-
-      const c$ = Rx.Observable.from([1,2,3])
-            .mapTo('C')
-
-      Rx.Observable.merge(a$, b$, c$)
+      Rx.Observable.combineLatest(a$, b$, c$)
           .subscribe(console.log);
-
 
     #+END_SRC
 
     #+RESULTS:
-    : A
-    : A
-    : A
-    : B
-    : B
-    : B
-    : C
-    : C
-    : C
+    : a1
+    : a2
+    : b1
+    : b2
+    : c1
+    : [ 'a2', 'b2', 'c1' ]
+    : c2
+    : [ 'a2', 'b2', 'c2' ]
+
+    默认的行为为深度优先,会优先计算深度，直到第一个条件满足,也就是c1才开始满足条件.
+
+    #+BEGIN_SRC js :results output :exports both
+      const Rx = require('rxjs');
+
+      const a$ = Rx.Observable.of('a1', 'a2', Rx.Scheduler.queue).do(console.log);
+      const b$ = Rx.Observable.of('b1', 'b2', Rx.Scheduler.queue).do(console.log);
+      const c$ = Rx.Observable.of('c1', 'c2', Rx.Scheduler.queue).do(console.log);
+
+      Rx.Observable.combineLatest(a$, b$, c$, Rx.Scheduler.queue)
+          .subscribe(console.log);
+
+    #+END_SRC
+
+    #+RESULTS:
+    #+begin_example
+    a1
+    b1
+    c1
+    [ 'a1', 'b1', 'c1' ]
+    a2
+    [ 'a2', 'b1', 'c1' ]
+    b2
+    [ 'a2', 'b2', 'c1' ]
+    c2
+    [ 'a2', 'b2', 'c2' ]
+
+    Scheduler.queue为广度优先，优先进行水平方向的计算.
+
+#+end_example
 
 #+BEGIN_HTML
 <h3>null</h3>
 #+END_HTML
-    默认的行为，同步调度，内部使用递归实现.
+    默认的行为，同步调度.
 
 
-此外除了这些Rx还实现了[[http://xgrommx.github.io/rx-book/content/rxjs_bindings/dom/schedulers/request_animation_frame.html][Scheduler.requestAnimationFrame]]等schedule. 可以方便浏览器实现一些动画效果.
+此外除了这些Rx还实现了[[http://xgrommx.github.io/rx-book/content/rxjs_bindings/dom/schedulers/request_animation_frame.html][Scheduler.animationFrame]]等schedule. 可以方便浏览器实现一些动画效果.
 
 #+BEGIN_HTML
 <h2>Hot-Cold模式</h2>
@@ -380,4 +405,4 @@ title: 重新学习下RxJS
    : done
    : after subscribe
 
-   这样好处是只有在有订阅者的时候才开始初始化一些资源. 符合直觉.
+   这样好处是只有在有订阅者的时候才开始初始化一些资源.
