@@ -53,6 +53,11 @@ Ob$.subscribe(console.log);
 </pre>
 </div>
 
+<pre class="example">
+ScalarObservable { _isScalar: true, value: 1, scheduler: null }
+undefined
+</pre>
+
 <p>
 这里打印了一个`ScalarObservable`表示是一个只有一个简单值的Observable. 同时看到订阅后`Observable`直接打印出来了, 所以不能将它当作一个Monad使用.
 </p>
@@ -88,6 +93,13 @@ const ob$ = Rx.Observable.from([1, 2, 3]);
 ob$.subscribe(myObserver);
 </pre>
 </div>
+
+<pre class="example">
+&lt;value&gt; -&gt; 1
+&lt;value&gt; -&gt; 2
+&lt;value&gt; -&gt; 3
+&lt;complete&gt; -&gt; undefined
+</pre>
 </div>
 </div>
 
@@ -118,7 +130,20 @@ ob$.subscribe((value) =&gt; {
 });
 </pre>
 </div>
+
 <p>
+side effect: 0
+A:  0
+side effect: 0
+B:  0
+side effect: 1
+A:  1
+side effect: 1
+B:  1
+side effect: 2
+A:  2
+side effect: 2
+B:  2
 side effect: 0
 A:  0
 side effect: 0
@@ -242,6 +267,20 @@ setTimeout(() =&gt; {
 }, 40);
 </pre>
 </div>
+
+<pre class="example">
+replay subject: 0
+replay subject: 1
+replay subject: 2
+behavior subject: 2
+-&gt;subscribe done&lt;-
+normal subject: 3
+replay subject: 3
+behavior subject: 3
+normal subject: 4
+replay subject: 4
+behavior subject: 4
+</pre>
 </div>
 </div>
 
@@ -268,6 +307,14 @@ ob$.subscribe((value) =&gt; {
 console.log('subscribe end');
 </pre>
 </div>
+
+<pre class="example">
+subscribe begin
+output:  1
+output:  2
+output:  3
+subscribe end
+</pre>
 
 <p>
 结果有点不符合预期, Observable中的操作默认都是同步执行的. 但是在很多情况下这都不满足我们的需要，因为我们想让ob中的操作在当前的执行都完成之后再执行.这种情况下就需要Scheduler来调度流的执行顺序. Scheduler决定了什么时刻再执行下一次操作.
@@ -345,6 +392,15 @@ setTimeout(() =&gt; {
 </pre>
 </div>
 
+<pre class="example">
+subscribe begin
+subscribe end
+output:  1
+output:  2
+output:  3
+timeout
+</pre>
+
 <p>
 subscribeOn的第二个参数如果不传默认为0.
 </p>
@@ -376,6 +432,11 @@ Rx.Observable.merge(obA$, obB$)
     });
 </pre>
 </div>
+
+<pre class="example">
+A
+B
+</pre>
 </div>
 </div>
 
@@ -395,13 +456,17 @@ Rx.Observable.from([1,2,3]).mapTo('A')
     .subscribe(console.log)
 </pre>
 </div>
+
+<pre class="example">
+A
+A
+A
+B
+B
+B
+</pre>
 </div>
 </div>
-
-
-
-
-
 
 <div id="outline-container-sec-6-4" class="outline-3">
 <h3 id="sec-6-4"><span class="section-number-3">6.4</span> null</h3>
@@ -436,6 +501,13 @@ ob$.subscribe(() =&gt; {
 console.log('after subscribe');
 </pre>
 </div>
+
+<pre class="example">
+before subscribe
+debug
+done
+after subscribe
+</pre>
 
 <p>
 这样好处是只有在有订阅者的时候才开始初始化一些资源.
