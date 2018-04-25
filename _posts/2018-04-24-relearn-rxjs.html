@@ -384,31 +384,75 @@ B
 
 <h3>Scheduler.queue</h3>
 <p>
-queue也是同步执行的一种，不同的是内部实现使用的是迭代实现而不是默认的递归
+queue如果不传参数也是同步执行的一种，不同的是内部实现使用的是循环实现而不是默认的递归.
+</p>
+
+<p>
+默认的方式(null):
 </p>
 
 <div class="org-src-container">
 
 <pre class="src src-js">const Rx = require('rxjs');
 
-Rx.Observable.from([1,2,3]).mapTo('A')
-    .concat(Rx.Observable.from([1,2,3]).mapTo('B'))
-    .subscribe(console.log)
+const a$ = Rx.Observable.of('a1','a2').do(console.log);
+const b$ = Rx.Observable.of('b1','b2').do(console.log);
+const c$ = Rx.Observable.of('c1','c2').do(console.log);
+
+Rx.Observable.combineLatest(a$, b$, c$)
+    .subscribe(console.log);
 </pre>
 </div>
 
 <pre class="example">
-A
-A
-A
-B
-B
-B
+a1
+a2
+b1
+b2
+c1
+[ 'a2', 'b2', 'c1' ]
+c2
+[ 'a2', 'b2', 'c2' ]
+</pre>
+
+<p>
+默认的行为为深度优先,会优先计算深度，直到第一个条件满足,也就是c1才开始满足条件.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-js">const Rx = require('rxjs');
+
+const a$ = Rx.Observable.of('a1', 'a2', Rx.Scheduler.queue).do(console.log);
+const b$ = Rx.Observable.of('b1', 'b2', Rx.Scheduler.queue).do(console.log);
+const c$ = Rx.Observable.of('c1', 'c2', Rx.Scheduler.queue).do(console.log);
+
+Rx.Observable.combineLatest(a$, b$, c$, Rx.Scheduler.queue)
+    .subscribe(console.log);
+</pre>
+</div>
+
+<pre class="example">
+a1
+b1
+c1
+[ 'a1', 'b1', 'c1' ]
+a2
+[ 'a2', 'b1', 'c1' ]
+b2
+[ 'a2', 'b2', 'c1' ]
+c2
+[ 'a2', 'b2', 'c2' ]
 </pre>
 
 <h3>null</h3>
 <p>
-默认的行为，同步调度，内部使用递归实现.
+默认的行为，同步调度.
+</p>
+
+
+<p>
+此外除了这些Rx还实现了<a href="http://xgrommx.github.io/rx-book/content/rxjs_bindings/dom/schedulers/request_animation_frame.html">Scheduler.animationFrame</a>等schedule. 可以方便浏览器实现一些动画效果.
 </p>
 
 <h2>Hot-Cold模式</h2>
@@ -443,5 +487,3 @@ after subscribe
 <p>
 这样好处是只有在有订阅者的时候才开始初始化一些资源.
 </p>
-
-<h3>切换Observable为Hot模式</h3>
