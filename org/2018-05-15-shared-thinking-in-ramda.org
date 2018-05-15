@@ -1,0 +1,11 @@
+f#+BEGIN_HTML
+---
+layout: post
+title: 分享PPT: Thinking in ramda
+---
+#+END_HTML
+
+
+地址:
+
+https://docs.google.com/presentation/d/1pUaZWA8_P8Y6cndK_8wPBUBfHP7i3FMOBVsjQEJWfao/edit?usp=sharing
